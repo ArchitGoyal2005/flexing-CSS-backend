@@ -1,9 +1,9 @@
 import { Router } from "express";
-import {Question, Question} from "../models/questionModel.js"
+import {Question} from "../models/questionModel.js"
 import { User } from "../models/userModel.js"
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/AppError.js";
-import { ApiResponses } from "../utils/ApiReasponses.js";
+
 
 
 const router =Router()
