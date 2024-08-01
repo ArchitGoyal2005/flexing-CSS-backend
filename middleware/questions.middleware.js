@@ -29,3 +29,4 @@ const addQuestions= catchAsync(async (req, res) => {
     user.questions=questions;
     await user.save();
 });
+export default addQuestions
