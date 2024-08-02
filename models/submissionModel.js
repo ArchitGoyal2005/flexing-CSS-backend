@@ -16,12 +16,7 @@ const SubmissionSchema = new mongoose.Schema(
       type: String,
       required: [true, "A ansewer must have been submitted"],
     },
-    isCorrect: Boolean,
-    answerSubmitted:{
-      type:Boolean,
-      default:false,
-      required:true
-    }
+    isCorrect: Boolean
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true }, timestamps: true }
 );

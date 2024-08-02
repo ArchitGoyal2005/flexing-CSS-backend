@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import addQuestions from "../middleware/questions.middleware";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -25,7 +26,7 @@ const UserSchema = new mongoose.Schema(
     },
     course: {
       type: String,
-      required: [true, "course is required"],
+      required: [true, "Course is required"],
     },
     year: {
       type: Number,
@@ -49,4 +50,12 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-export const User = mongoose.model("User", UserSchema);
+UserSchema.pre("save", function (next) {
+  if (this.questions.length === 0) {
+    addQuestions(this); 
+  }
+  next();
+});
+const User = mongoose.model("User", UserSchema);
+
+export default User;
