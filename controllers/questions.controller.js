@@ -1,17 +1,18 @@
-import { Question } from "../models/questionModel";
-import { User } from "../models/userModel";
-import AppError from "../utils/AppError";
-import catchAsync from "../utils/catchAsync";
+import { Question } from "../models/questionModel.js";
+import { User } from "../models/userModel.js";
+import AppError from "../utils/AppError.js";
+import catchAsync from "../utils/catchAsync.js";
 
 export const getQuestionsForUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.user?.id);
+  const user = await User.findOne({ clerkId: req.params.userId });
+
   if (!user) {
     next(new AppError("user not found", 404));
   }
 
   const questions = user.questions;
 
-  if (!questions || questions.length === 0) {
+  if (questions.length === 0) {
     next(new AppError("No questions found", 404));
   } else {
     const questionsData = await Question.find({

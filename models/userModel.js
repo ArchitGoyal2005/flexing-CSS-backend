@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import addQuestions from "../middleware/questions.middleware";
+import addQuestions from "../middleware/questions.middleware.js";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -52,10 +52,9 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.pre("save", function (next) {
   if (this.questions.length === 0) {
-    addQuestions(this); 
+    addQuestions(this);
   }
   next();
 });
-const User = mongoose.model("User", UserSchema);
 
-export default User;
+export const User = mongoose.model("User", UserSchema);

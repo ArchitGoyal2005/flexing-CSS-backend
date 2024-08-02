@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import AppError from "./utils/AppError.js";
 
+import questionRouter from "./routes/questions.routes.js";
+
 const app = express();
 
 app.use(cors());
@@ -12,6 +14,8 @@ app.get("/", (req, res) => {
     status: "ok",
   });
 });
+
+app.use("/api/v1/questions", questionRouter);
 
 app.use("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));

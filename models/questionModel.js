@@ -14,7 +14,7 @@ const QuestionSchema = new mongoose.Schema(
       type: String,
       required: [true, "A question must have objectContainerHTML"],
     },
-    initalCSS: {
+    initialCSS: {
       type: String,
       required: [true, "A question must have initalCSS"],
     },
