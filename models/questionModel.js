@@ -31,6 +31,10 @@ const QuestionSchema = new mongoose.Schema(
       enum: ["easy", "difficult", "medium"],
       require: [true, "A question must have difficulty"],
     },
+    points: {
+      type: Number,
+      require: [true, "A question must have point"],
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -38,5 +42,20 @@ const QuestionSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+QuestionSchema.pre("save", function (next) {
+  switch (this.difficulty) {
+    case "easy":
+      this.points = 100;
+      break;
+    case "medium":
+      this.points = 200;
+      break;
+    case "difficult":
+      this.points = 300;
+      break;
+  }
+  next();
+});
 
 export const Question = mongoose.model("Question", QuestionSchema);
