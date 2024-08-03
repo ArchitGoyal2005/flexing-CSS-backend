@@ -1,7 +1,12 @@
 import { Router } from "express";
-import { createSubmission } from "../controllers/submission.controllers.js";
+import {
+  createSubmission,
+  getSubmittedQuestionsIdForUser,
+} from "../controllers/submission.controllers.js";
 
 const router = Router();
+
+router.get("/:clerkId", getSubmittedQuestionsIdForUser);
 
 router.post("/", createSubmission);
 

@@ -1,9 +1,7 @@
-import { User } from "../models/userModel.js";
-import catchAsync from "../utils/catchAsync.js";
-import AppError from "../utils/AppError.js";
 import { Router } from "express";
-import { Question } from "../models/questionModel.js";
-import { Submission } from "../models/submissionModel.js";
+import { User } from "../models/userModel.js";
+import AppError from "../utils/AppError.js";
+import catchAsync from "../utils/catchAsync.js";
 
 const registerUser = catchAsync(async (req, res) => {
   const { clerkId, rollNumber, name, email, branch, course, year } = req.body;

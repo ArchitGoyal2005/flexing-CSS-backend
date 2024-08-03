@@ -1,5 +1,6 @@
 import { Question } from "../models/questionModel.js";
 import { Submission } from "../models/submissionModel.js";
+import { User } from "../models/userModel.js";
 import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 
@@ -33,7 +34,8 @@ export const createSubmission = catchAsync(async (req, res, next) => {
     next(new AppError("Please enter all the valid fields", 400));
   const question = await Question.findById(questionId);
 
-  if (!question) next(new AppError("Please enter a valid question id", 400));
+  if (!question)
+    return next(new AppError("Please enter a valid question id", 400));
 
   const isCorrect = isEqualCSS(answer, question.answer);
   const submission = await Submission.create({
@@ -49,3 +51,28 @@ export const createSubmission = catchAsync(async (req, res, next) => {
     isCorrect,
   });
 });
+
+export const getSubmittedQuestionsIdForUser = catchAsync(
+  async (req, res, next) => {
+    if (!req.params.clerkId) return next(new AppError("Enter clerk id"), 400);
+
+    const user = await User.findOne({ clerkId: req.params.clerkId });
+
+    if (!user) return next(new AppError("Enter a valid clerk Id", 404));
+
+    const submissions = await Submission.find(
+      {
+        isCorrect: true,
+        userId: user._id,
+      },
+      { questionId: 1 }
+    );
+
+    const questionIds = submissions.map((submission) => submission.questionId);
+
+    res.status(200).json({
+      success: true,
+      data: questionIds,
+    });
+  }
+);
