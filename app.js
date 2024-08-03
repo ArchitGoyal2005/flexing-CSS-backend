@@ -7,6 +7,18 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+const ContestSchema ={
+  start:Date,
+  end:Date
+};
+const Contest= mongoose.model("Contest",ContestSchema);
+if(Contest.findOne({})==null){
+  const c=new Contest({
+    start:null,
+    end:null
+  });
+  c.save();
+}
 const QuestionSchema = {
   questionId : String,
   targetContainerHTML : String,
@@ -34,6 +46,7 @@ const UserSchema=new mongoose.Schema({
   hasPlayed:Boolean,
   score:Number,
   questions:Array,
+  hasFinished:Boolean
 });
 const User=mongoose.model("User",UserSchema);
 const Submission=mongoose.model("Submission",SubmissionSchema);
@@ -42,7 +55,15 @@ app.get("/", (req, res) => {
     status: "ok",
   });
 });
+app.get("/contest/start/new",(req,res)=>{
+  let s=new Date();
+  let e=new Date(s.getTime()+(1*60*60*1000));
+  Contest.updateOne({},{$set:{start:s,end:e}}).then(()=>{res.send("Contest Started");}).catch((err)=>{res.send(err);});
+});
 app.post("/getquestions",(req,res)=>{
+    let currtim=new Date();
+    const contestTimings=Contest.findOne({});
+    if(contestTimings.start===null||(currtim>=contestTimings.start && currtim<=contestTimings.end)){
     const u=User.findOne({userid:req.userid});
     if(u.questions.length===15){
         res.json(u.questions);
@@ -55,8 +76,11 @@ app.post("/getquestions",(req,res)=>{
       q.concat(eachdiffq);
       eachdiffq=setquestions(3,"hard");
       q.concat(eachdiffq);
-      User.updateOne({userid:req.userid},{$set:{questions:q}});
+      User.updateOne({userid:req.userid},{$set:{questions:q,hasPlayed:true}});
       res.json(q);
+    }}
+    else{
+      res.json("Contest not Started!");
     }
 });
 app.post("/signup",(req,res)=>{
@@ -69,15 +93,19 @@ app.post("/signup",(req,res)=>{
     branch:req.user.branch,
     batch:req.user.batch,
     hasPlayed:false,
+    hasFinished:false,
     score:0,
     questions:[],
   });
 newuser.save().then(()=>{res.send("success");}).catch((err)=>{res.send(err);});
 });
 app.post("/submit",(req,res)=>{
+  let currtim=new Date();
+  const u=User.findOne({userid:req.submission.userid});
+  const contestTimings=Contest.findOne({});
+  if(contestTimings.end===null || currtim<=contestTimings.end || u.hasFinished===true){
     var v=false;
     const q=Question.findOne({questionId:req.submission.questionId});
-    const u=User.findOne({userid:req.submission.userid});
     if(req.submission.answer===q.answer){
       v=true;
     }
@@ -85,7 +113,14 @@ app.post("/submit",(req,res)=>{
     if(v){newscore+=125;}
     const newSubmission=Submission({userid:u.userid,questionId:q.questionId,submittedanswer:req.submission.answer,verdict:v});
     User.updateOne({userid:u.userid},{$set:{score:newscore}});
-    res.json(v);
+    res.json(String(v));}
+    else{
+      res.json("Contest ended!");
+    }
+});
+app.post("/finish",(req,res)=>{
+    User.updateOne({userid:req.userid},{$set:{hasFinished:true}});
+    res.json("Finished!");
 });
 app.use("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
