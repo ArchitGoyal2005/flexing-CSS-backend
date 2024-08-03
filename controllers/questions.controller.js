@@ -7,13 +7,13 @@ export const getQuestionsForUser = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ clerkId: req.params.userId });
 
   if (!user) {
-    next(new AppError("user not found", 404));
+    return next(new AppError("user not found", 404));
   }
 
   const questions = user.questions;
 
   if (questions.length === 0) {
-    next(new AppError("No questions found", 404));
+    return next(new AppError("No questions found", 404));
   } else {
     const questionsData = await Question.find({
       questionId: { $in: questions },

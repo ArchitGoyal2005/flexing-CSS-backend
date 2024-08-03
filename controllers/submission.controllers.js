@@ -31,7 +31,7 @@ export const createSubmission = catchAsync(async (req, res, next) => {
   const { questionId } = req.body;
   const { userId } = req.body;
   if (!answer || !questionId || !userId)
-    next(new AppError("Please enter all the valid fields", 400));
+    return next(new AppError("Please enter all the valid fields", 400));
   const question = await Question.findById(questionId);
 
   if (!question)
