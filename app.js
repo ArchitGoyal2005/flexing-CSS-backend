@@ -4,6 +4,7 @@ import AppError from "./utils/AppError.js";
 
 import questionRouter from "./routes/questions.routes.js";
 import submissionRouter from "./routes/submission.routes.js";
+import clockRouter from "./routes/clock.routes.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/questions", questionRouter);
 app.use("/api/v1/submissions", submissionRouter);
+app.use("/api/v1/clock", clockRouter);
 
 app.use("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
