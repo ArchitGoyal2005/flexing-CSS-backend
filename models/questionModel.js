@@ -43,6 +43,8 @@ const QuestionSchema = new mongoose.Schema(
   }
 );
 
+//NO OF ANSWER LINES TO BE ADDED
+
 QuestionSchema.pre("save", function (next) {
   switch (this.difficulty) {
     case "easy":

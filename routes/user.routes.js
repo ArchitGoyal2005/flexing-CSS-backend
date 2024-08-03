@@ -34,25 +34,3 @@ const registerUser = catchAsync(async (req, res) => {
 });
 const router = Router();
 router.route("/register").post(registerUser);
-
-//submission
-const getSubmission = catchAsync(async (req, res) => {
-  const { answer } = req.body;
-  const { questionId } = req.body;
-  const { userId } = req.params;
-  const question = await Question.findById(questionId);
-
-  const isCorrect = answer === question.answer;
-  const submission = await Submission.create({
-    userId,
-    questionId,
-    submittedAnswer: answer,
-    isCorrect,
-  });
-
-  res.status(200).json({
-    status: "success",
-  });
-});
-
-router.route("/:userId/submission").post(getSubmission);
