@@ -1,13 +1,8 @@
 import { User } from "../models/userModel";
 import catchAsync from "../utils/catchAsync";
-import { Question } from "../models/questionModel";
+import { Question } from "../models/questionModel.js";
 
-const addQuestions= catchAsync(async (req, res) => {
-    const user = await User.findById(req.user?.id);
-    if (!user) {
-        return res.status(404).send({ message: "User not found" });
-    }
-
+const addQuestions=(user)=>{
     const questions = [];
     for (let i = 0; i < 15; i++) {
         if (i < 7) {
@@ -27,6 +22,5 @@ const addQuestions= catchAsync(async (req, res) => {
         }
     }
     user.questions=questions;
-    await user.save();
-});
+};
 export default addQuestions
