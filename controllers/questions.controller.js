@@ -4,7 +4,10 @@ import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 
 export const getQuestionsForUser = catchAsync(async (req, res, next) => {
-  const user = await User.findOne({ clerkId: req.params.userId });
+  const user = await User.findOne(
+    { clerkId: req.params.userId },
+    { answer: 0 }
+  );
 
   if (!user) {
     return next(new AppError("user not found", 404));
