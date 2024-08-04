@@ -28,10 +28,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "Course is required"],
     },
+    mobile: {
+      type: String,
+      required: [true, "Mobile is required"],
+    },
     year: {
       type: Number,
       required: [true, "Year is required"],
-      min: 2,
+      min: 1,
+      max: 2,
     },
     hasPlayed: {
       type: Boolean,
