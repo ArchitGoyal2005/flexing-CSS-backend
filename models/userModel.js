@@ -8,11 +8,6 @@ const UserSchema = new mongoose.Schema(
       required: [true, "User ID is required"],
       unique: true,
     },
-    clerk_username: {
-      type: String,
-      required: [true, "User Name is required"],
-      unique: true,
-    },
     rollNumber: {
       type: String,
       required: [true, "Roll Number is required"],
