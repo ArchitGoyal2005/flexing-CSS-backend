@@ -6,11 +6,21 @@ import questionRouter from "./routes/questions.routes.js";
 import submissionRouter from "./routes/submission.routes.js";
 import clockRouter from "./routes/clock.routes.js";
 import userRouter from "./routes/user.routes.js";
+import helmet from "helmet";
+import morgan from "morgan";
+import mongoSanitize from "express-mongo-sanitize";
 
 const app = express();
 
+app.use(morgan("combined"));
+
+app.use(helmet());
+
 app.use(cors());
+
 app.use(express.json());
+
+app.use(mongoSanitize());
 
 app.get("/", (req, res) => {
   res.status(200).json({
