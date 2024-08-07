@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Year is required"],
       min: 1,
-      max: 2,
+      max: 3,
     },
     hasPlayed: {
       type: Boolean,
