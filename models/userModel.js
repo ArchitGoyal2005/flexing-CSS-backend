@@ -43,6 +43,9 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    timeLeft: {
+      type: Number,
+    },
     score: {
       type: Number,
       default: 0,
