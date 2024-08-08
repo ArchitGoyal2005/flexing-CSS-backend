@@ -12,7 +12,7 @@ import mongoSanitize from "express-mongo-sanitize";
 
 const app = express();
 
-app.use(morgan("combined"));
+app.use(morgan("tiny"));
 
 app.use(helmet());
 

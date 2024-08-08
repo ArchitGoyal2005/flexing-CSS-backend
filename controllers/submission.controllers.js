@@ -11,8 +11,6 @@ const isEqualCSS = (css1, css2) => {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
 
-  console.log(obj1, obj2);
-
   if (keys1.length !== keys2.length) {
     return false;
   }
@@ -36,7 +34,7 @@ const isEqualCSS = (css1, css2) => {
     value1 = value1.replace("flex-", "");
     value2 = value2.replace("flex-", "");
 
-    if (obj1[key] !== obj2[key] && key !== "flex-flow") {
+    if (value1 !== value2 && key !== "flex-flow") {
       return false;
     }
   }
