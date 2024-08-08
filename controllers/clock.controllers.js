@@ -4,7 +4,7 @@ import AppError from "../utils/AppError.js";
 
 export const startClock = catchAsync(async (req, res, next) => {
   if (!req.body.time) return next(new AppError("Enter time", 400));
-  const time = req.body.minutes * 60 * 1000;
+  const time = parseInt(req.body.time) * 60 * 1000;
   await Clock.findOneAndUpdate({}, { endTime: Date.now() + time });
   res.status(204).json({
     success: true,
