@@ -6,14 +6,6 @@ const QuestionSchema = new mongoose.Schema(
       type: String,
       required: [true, "A question must have a questionId"],
     },
-    targetContainerHTML: {
-      type: String,
-      required: [true, "A question must have targetContainerHTML"],
-    },
-    objectContainerHTML: {
-      type: String,
-      required: [true, "A question must have objectContainerHTML"],
-    },
     initialCSS: {
       type: String,
       required: [true, "A question must have initalCSS"],
@@ -28,7 +20,7 @@ const QuestionSchema = new mongoose.Schema(
     },
     difficulty: {
       type: String,
-      enum: ["easy", "difficult", "medium"],
+      enum: ["easy", "medium"],
       require: [true, "A question must have difficulty"],
     },
     points: {
