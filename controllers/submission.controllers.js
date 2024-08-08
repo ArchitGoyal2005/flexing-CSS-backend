@@ -18,7 +18,25 @@ const isEqualCSS = (css1, css2) => {
   }
 
   for (let key of keys1) {
-    if (obj1[key] !== obj2[key]) {
+    let value1 = obj1[key];
+    let value2 = obj2[key];
+
+    if (key === "flex-flow") {
+      const vals1 = value1.split(" ");
+      const vals2 = value2.split(" ");
+      if (vals1.length !== vals2.length) return false;
+      return vals1
+        .sort()
+        .every((value, index) => value === vals2.sort()[index]);
+    }
+
+    value1 = value1.replace(/\s+/g, "");
+    value2 = value2.replace(/\s+/g, "");
+
+    value1 = value1.replace("flex-", "");
+    value2 = value2.replace("flex-", "");
+
+    if (obj1[key] !== obj2[key] && key !== "flex-flow") {
       return false;
     }
   }
