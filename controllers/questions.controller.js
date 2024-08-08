@@ -18,9 +18,12 @@ export const getQuestionsForUser = catchAsync(async (req, res, next) => {
   if (questions.length === 0) {
     return next(new AppError("No questions found", 404));
   } else {
-    const questionsData = await Question.find({
-      questionId: { $in: questions },
-    });
+    const questionsData = await Question.find(
+      {
+        questionId: { $in: questions },
+      },
+      { answerCSS: 0 }
+    );
 
     res.status(200).json({
       status: "success",
