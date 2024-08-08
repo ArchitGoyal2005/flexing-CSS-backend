@@ -13,7 +13,11 @@ const registerUser = catchAsync(async (req, res) => {
 });
 
 const endTestForUser = catchAsync(async (req, res, next) => {
-  if (!req.body.id || !req.body.timeLeft)
+  if (
+    !req.body.id ||
+    req.body.timeLeft === undefined ||
+    req.body.timeLeft === null
+  )
     return next(new AppError("Please fill all the details!!", 404));
 
   const user = await User.findByIdAndUpdate(
