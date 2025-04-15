@@ -92,3 +92,61 @@ export const getSubmittedQuestionsIdForUser = catchAsync(
     });
   }
 );
+
+export const getResults = catchAsync(async (req, res, next) => {
+  const leaderboard = await Submission.aggregate([
+    // Group submissions by userId
+    {
+      $group: {
+        _id: "$userId",
+        totalPoints: { $sum: "$pointsScored" },
+        correctAnswers: {
+          $sum: {
+            $cond: { if: "$isCorrect", then: 1, else: 0 },
+          },
+        },
+        incorrectAnswers: {
+          $sum: {
+            $cond: { if: { $eq: ["$isCorrect", false] }, then: 1, else: 0 },
+          },
+        },
+      },
+    },
+    // Sort by totalPoints in descending order
+    {
+      $sort: { totalPoints: -1 },
+    },
+    // Optionally, lookup to populate user details
+    {
+      $lookup: {
+        from: "users",
+        localField: "_id",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    // Unwind user array (if lookup was used)
+    {
+      $unwind: "$user",
+    },
+    // Project the fields you want in the final output
+    {
+      $project: {
+        _id: 0, // Exclude the userId if not needed
+        userId: "$_id",
+        totalPoints: 1,
+        correctAnswers: 1,
+        incorrectAnswers: 1,
+        user: {
+          name: "$user.name", // Assuming 'name' is a field in the User model
+          email: "$user.email", // Assuming 'email' is a field in the User model
+        },
+      },
+    },
+  ]);
+
+  res.status(201).json({
+    success: "true",
+    data: leaderboard,
+  });
+});

@@ -77,10 +77,33 @@ const addQuestions = catchAsync(async (req, res, next) => {
   });
 });
 
+const addQuestionsForAdmin = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ rollNumber: "22001011010" }); // Get all users
+  if (!user) return next(new AppError("No admin found", 404));
+
+  const allQuestions = [];
+
+  for (let i = 1; i <= 17; i++) {
+    allQuestions.push(`easy_${i}`);
+  }
+
+  for (let i = 1; i <= 12; i++) {
+    allQuestions.push(`medium_${i}`);
+  }
+
+  user.questions = allQuestions;
+  await user.save();
+
+  res.status(200).json({
+    success: "true",
+  });
+});
+
 const router = Router();
 
 router.route("/register").post(registerUser);
 router.route("/end").patch(endTestForUser);
 router.route("/correctQs").patch(addQuestions);
+router.route("/admin/addQuestions").patch(addQuestionsForAdmin);
 
 export default router;
